@@ -14,7 +14,12 @@ use crate::{
     types::server::InitError,
 };
 
-#[cfg(any(target_os = "linux", target_os = "android", target_os = "redox"))]
+#[cfg(any(
+    target_os = "linux",
+    target_os = "android",
+    target_os = "redox",
+    target_os = "minix"
+))]
 use rustix::event::{epoll, Timespec};
 
 #[cfg(any(
@@ -34,7 +39,12 @@ pub struct InnerBackend<D: 'static> {
 
 impl<D> InnerBackend<D> {
     pub fn new() -> Result<Self, InitError> {
-        #[cfg(any(target_os = "linux", target_os = "android", target_os = "redox"))]
+        #[cfg(any(
+    target_os = "linux",
+    target_os = "android",
+    target_os = "redox",
+    target_os = "minix"
+))]
         let poll_fd = epoll::create(epoll::CreateFlags::CLOEXEC)
             .map_err(Into::into)
             .map_err(InitError::Io)?;
@@ -77,7 +87,12 @@ impl<D> InnerBackend<D> {
         ret
     }
 
-    #[cfg(any(target_os = "linux", target_os = "android", target_os = "redox"))]
+    #[cfg(any(
+    target_os = "linux",
+    target_os = "android",
+    target_os = "redox",
+    target_os = "minix"
+))]
     pub fn dispatch_all_clients(&self, data: &mut D) -> std::io::Result<usize> {
         use std::os::unix::io::AsFd;
 

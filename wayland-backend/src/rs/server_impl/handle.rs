@@ -361,7 +361,12 @@ impl<D> ErasedState for State<D> {
         let client = self.clients.get_client(id.clone()).unwrap();
 
         // register the client to the internal epoll
-        #[cfg(any(target_os = "linux", target_os = "android", target_os = "redox"))]
+        #[cfg(any(
+    target_os = "linux",
+    target_os = "android",
+    target_os = "redox",
+    target_os = "minix"
+))]
         let ret = {
             use rustix::event::epoll;
             epoll::add(
